@@ -6,6 +6,7 @@ import "./index.css";
 import Auth from "./pages/Auth";
 import { ToastContainer, toast } from "react-toastify";
 import CreatePost from "./pages/CreatePost";
+import BlogPost from "./pages/BlogPost";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/Create-post" element={<CreatePost></CreatePost>} />
+          <Route path="/post/:postId" element={<BlogPost></BlogPost>} />
           {/* Define other routes as needed */}
         </Routes>
         <ToastContainer />

@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "../widgets/NavBar";
 import Post from "../widgets/Post";
+import axios from "axios";
 
 const Home = () => {
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    axios.get("http://localhost:3001/post/getPosts").then((res) => {
+      console.log(res.data);
+      setPosts(res.data); // Update the posts state with the entire array
+    });
+  }, []);
   const blogPosts = [
     {
       id: 1,
@@ -27,7 +35,7 @@ const Home = () => {
   return (
     <div>
       <div>
-        <Post blogPosts={blogPosts}></Post>
+        <Post blogPosts={posts}></Post>
       </div>
     </div>
   );

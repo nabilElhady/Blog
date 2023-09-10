@@ -5,6 +5,8 @@ const postRoutes = require("./routes/Post");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const multer = require("multer");
+const path = require("path");
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 const port = 3001;
 
@@ -30,8 +32,6 @@ app.get("/test", (req, res) => {
 });
 app.use("/Auth", authRoutes);
 app.use("/post", uploadedimgs.single("file"), postRoutes);
-// Start the server
-
 mongoose
   .connect(
     "mongodb://nabilelhady73:1952634875@ac-ihxua3p-shard-00-00.25wupk4.mongodb.net:27017,ac-ihxua3p-shard-00-01.25wupk4.mongodb.net:27017,ac-ihxua3p-shard-00-02.25wupk4.mongodb.net:27017/?ssl=true&replicaSet=atlas-wyz93w-shard-0&authSource=admin&retryWrites=true&w=majority"
