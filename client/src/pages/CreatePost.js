@@ -3,6 +3,9 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Formik, useFormik } from "formik";
 import { postSchema } from "../Schemas/Post";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 const modules = {
   toolbar: [
@@ -32,6 +35,7 @@ const formats = [
   "image",
 ];
 const CreatePost = () => {
+  const navigate = useNavigate();
   const postForm = useFormik({
     initialValues: {
       title: "",
@@ -52,20 +56,26 @@ const CreatePost = () => {
     },
   });
   const createPost = () => {
-    const formData = new FormData();
-    formData.append("title", postForm.values.title);
-    formData.append("summary", postForm.values.summary);
-    formData.append("content", postForm.values.content);
-    formData.append("file", postForm.values.file);
-    axios
-      .post("http://localhost:3001/post/createPost", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data", // Important for multer on the server
-        },
-      })
-      .then((res) => {
-        console.log(res);
-      });
+    if (Object.keys(postForm.errors).length === 0 && postForm.values.file) {
+      const formData = new FormData();
+      formData.append("title", postForm.values.title);
+      formData.append("summary", postForm.values.summary);
+      formData.append("content", postForm.values.content);
+      formData.append("file", postForm.values.file);
+      axios
+        .post("http://localhost:3001/post/createPost", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data", // Important for multer on the server
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          toast("you created the post");
+          navigate("/");
+        });
+    } else {
+      toast("Validation errors found ");
+    }
   };
   return (
     <form onSubmit={postForm.handleSubmit}>
@@ -79,6 +89,9 @@ const CreatePost = () => {
           value={postForm.values.title}
           onChange={postForm.handleChange}
         />
+        {postForm.errors.title && postForm.touched.title && (
+          <p>{postForm.errors.title}</p>
+        )}
         <input
           name="summary"
           className="w-full px-4 py-2 border rounded-lg shadow-md focus:outline-none focus:border-blue-500"
